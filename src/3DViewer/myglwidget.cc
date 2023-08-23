@@ -25,6 +25,7 @@ void MyGLWidget::SetController(s21::Controller *controller) {
 
 void MyGLWidget::paintGL() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  CoordinateAxis();
   if (flag_open_ == true) {
     draw();
   }
@@ -34,6 +35,7 @@ void MyGLWidget::draw() {
   std::vector<float> color_vector =
       controller_->get_settings_color("color_back");
   glClearColor(color_vector[0], color_vector[1], color_vector[2], 0.0f);
+
   GLfloat *vertices = controller_->get_vertices();
   GLuint *indices = controller_->get_indices();
   // std::cout << "=====================================================" <<
@@ -57,18 +59,18 @@ void MyGLWidget::draw() {
   glTranslatef(0.0, 0.0, -2.0);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  glRotatef(rotationX, 1.0, 0.0, 0.0);
-  glRotatef(rotationY, 0.0, 1.0, 0.0);
-  glRotatef(rotationZ, 0.0, 0.0, 1.0);
+  // glRotatef(rotationX, 1.0, 0.0, 0.0);
+  // glRotatef(rotationY, 0.0, 1.0, 0.0);
+  // glRotatef(rotationZ, 0.0, 0.0, 1.0);
 
   glVertexPointer(3, GL_FLOAT, 0, vertices);
   glPointSize(controller_->get_settings("point_size"));
   glLineWidth(controller_->get_settings("line_width"));
-  LineDisplayMethod();
-  PointDisplayMethod();
+  // LineDisplayMethod();
+  // PointDisplayMethod();
   glEnableClientState(GL_VERTEX_ARRAY);
-  glStencilOp(1, 1, 1);
-  glTranslatef(0, 0, 0);
+  // glStencilOp(1, 1, 1);
+  // glTranslatef(0, 0, 0);
   color_vector = controller_->get_settings_color("color_top");
   glColor3d(color_vector[0], color_vector[1], color_vector[2]);
   if (controller_->get_settings("vertex_display_method") != 2) {
@@ -98,4 +100,24 @@ void MyGLWidget::PointDisplayMethod() {
   } else {
     glDisable(GL_POINT_SMOOTH);
   }
+}
+
+void MyGLWidget::CoordinateAxis() {
+  glEnable(GL_LINE_STIPPLE);
+  glLineStipple(20, 0x3333);
+  glLineWidth(1.0);
+  glBegin(GL_LINES);
+  glColor3f(0.2, 0.8, 0.8);
+  glVertex3f(0.0f, -10000.0f, 0.0f);
+  glVertex3f(0.0f, 10000.0f, 0.0f);
+
+  glColor3f(0.2, 0.8, 0.8);
+  glVertex3f(0.0f, 0.0f, -10000.0f);
+  glVertex3f(0.0f, 0.0f, 10000.0f);
+
+  glColor3f(0.2, 0.8, 0.8);
+  glVertex3f(-10000.0f, 0.0f, 0.0f);
+  glVertex3f(10000.0f, 0.0f, .0f);
+  glEnd();
+  glDisable(GL_LINE_STIPPLE);
 }

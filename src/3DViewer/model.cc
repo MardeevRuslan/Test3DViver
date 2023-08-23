@@ -82,7 +82,7 @@ void Model::RotateTransformX() {
   coordinates_[1] =
       y * cos(transform_["rotateX"] * k) + z * sin(transform_["rotateX"] * k);
   coordinates_[2] =
-      y * sin(transform_["rotateX"] * k) + z * cos(transform_["rotateX"] * k);
+      -y * sin(transform_["rotateX"] * k) + z * cos(transform_["rotateX"] * k);
 }
 
 void Model::RotateTransformY() {
@@ -98,7 +98,7 @@ void Model::RotateTransformZ() {
   float x = coordinates_[0];
   float y = coordinates_[1];
   coordinates_[0] =
-      x * cos(transform_["rotateZ"] * k) - y * sin(transform_["rotateZ"] * k);
+      x * cos(transform_["rotateZ"] * k) + y * sin(transform_["rotateZ"] * k);
   coordinates_[1] =
       -x * sin(transform_["rotateZ"] * k) + y * cos(transform_["rotateZ"] * k);
 }

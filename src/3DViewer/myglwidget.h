@@ -45,6 +45,7 @@ class MyGLWidget : public QOpenGLWidget, protected QOpenGLFunctions {
   void draw();
   void LineDisplayMethod();
   void PointDisplayMethod();
+  void CoordinateAxis();
 
   bool flag_open_ = false;
   s21::Controller *controller_;
