@@ -33,7 +33,7 @@ endif
 
 default: all
 
-all: clean install
+all: clean style_fix install
 
 build:
 	mkdir -p $(BUILD_DIR)

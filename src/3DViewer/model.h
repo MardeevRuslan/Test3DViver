@@ -48,10 +48,8 @@ class Model {
   std::vector<float> vector_poligons_;
 
  private:
-  void ScaleTransform();
-  void TranslateTransform();
   void TransformVectorPolygons();
-  void RotateTransform();
+  void ModelTransform();
   void ReadMapTransform();
   void RotateTransformX();
   void RotateTransformY();

@@ -59,6 +59,7 @@ void MainWindow::on_Open_file_clicked() {
   std::string filename = filename_qstring.toStdString();
   controller_->DataTransmission(filename);
   flag_open_ = true;
+  SetDefaultValues();
   ui->openGLWidget->SetController(controller_);
   ui->openGLWidget->update();
   DataOutputToScreen(filename);
@@ -319,4 +320,20 @@ void MainWindow::byld_gif() {
     GifEnd(&writer);
     timer->stop();
   }
+}
+
+void MainWindow::SetDefaultValues() {
+  ui->XRotateSpin->setValue(0);
+  ui->XRotateDial->setValue(0);
+  ui->YRotateSpin->setValue(0);
+  ui->YRotateDial->setValue(0);
+  ui->ZRotateSpin->setValue(0);
+  ui->ZRotateDial->setValue(0);
+  ui->XTranslateSpin->setValue(0);
+  ui->XTranslateSlider->setValue(0);
+  ui->YTranslateSpin->setValue(0);
+  ui->YTranslateSlider->setValue(0);
+  ui->ZTranslateSpin->setValue(0);
+  ui->ZTranslateSlider->setValue(0);
+  ui->ScaleSpin->setValue(1);
 }

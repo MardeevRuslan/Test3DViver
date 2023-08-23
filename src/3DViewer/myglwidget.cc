@@ -53,8 +53,8 @@ void MyGLWidget::draw() {
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  glOrtho(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
-  glTranslatef(0.0, 0.0, -0.5);
+  glOrtho(-1.0, 1.0, -1.0, 1.0, -5.0, 5.0);
+  glTranslatef(0.0, 0.0, -2.0);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   glRotatef(rotationX, 1.0, 0.0, 0.0);

@@ -87,6 +87,7 @@ class MainWindow : public QMainWindow {
   s21::Controller *controller_ = nullptr;
   void DefaultSettings();
   void DataOutputToScreen(std::string filename);
+  void SetDefaultValues();
   QColor ShowDialog(QPoint point);
 };
 #endif  // MAINWINDOW_H

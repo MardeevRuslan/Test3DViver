@@ -4,6 +4,8 @@
 #include "mainwindow.h"
 
 namespace s21 {
+const float pi = 3.141593;
+const float k = pi / 180;
 
 Model::Model() { my_object_ = new Object(); };
 
@@ -20,9 +22,7 @@ std::vector<int> Model::get_poligon(int i) {
 
 GLfloat *Model::get_vertices() {
   vector_koordinate_ = my_object_->vertexes_;
-  ScaleTransform();
-  TranslateTransform();
-  RotateTransform();
+  ModelTransform();
   GLfloat *vertices = new GLfloat[vector_koordinate_.size()];
   for (size_t i = 0; i < vector_koordinate_.size(); i++) {
     vertices[i] = vector_koordinate_[i];
@@ -43,6 +43,8 @@ void Model::WorkingModel(std::string filename) {
   this->my_object_->vertexes_.clear();
   this->my_object_->vertex_count_ = 0;
   this->my_object_->polygon_count_ = 0;
+  this->vector_koordinate_.clear();
+  this->vector_poligons_.clear();
   parser.ParserVetexAndFace(filename, this->my_object_);
   ReadMapTransform();
   TransformVectorPolygons();
@@ -57,36 +59,14 @@ void Model::ReadMapTransform() {
   this->transform_["scale"] = 1.0;
 }
 
-void Model::ScaleTransform() {
-  for (size_t i = 0; i < vector_koordinate_.size(); i++) {
-    vector_koordinate_[i] *= transform_["scale"];
-  }
-}
-
-void Model::TranslateTransform() {
-  for (size_t i = 0; i < vector_koordinate_.size(); i++) {
-    switch (i % 3) {
-      case 0:
-        vector_koordinate_[i] += transform_["translateX"] / 100;
-        break;
-      case 1:
-        vector_koordinate_[i] += transform_["translateY"] / 100;
-        break;
-      case 2:
-        vector_koordinate_[i] += transform_["translateZ"] / 100;
-        break;
-      default:
-        break;
-    }
-    vector_koordinate_[i] *= transform_["scale"];
-  }
-}
-
-void Model::RotateTransform() {
+void Model::ModelTransform() {
   for (size_t i = 0; i < vector_koordinate_.size() - 2; i += 3) {
-    coordinates_[0] = vector_koordinate_[i];
-    coordinates_[1] = vector_koordinate_[i + 1];
-    coordinates_[2] = vector_koordinate_[i + 2];
+    coordinates_[0] = vector_koordinate_[i] * transform_["scale"] +
+                      (transform_["translateX"] / 25);
+    coordinates_[1] = vector_koordinate_[i + 1] * transform_["scale"] +
+                      (transform_["translateY"] / 25);
+    coordinates_[2] = vector_koordinate_[i + 2] * transform_["scale"] +
+                      (transform_["translateZ"] / 25);
     RotateTransformX();
     RotateTransformY();
     RotateTransformZ();
@@ -100,27 +80,27 @@ void Model::RotateTransformX() {
   float y = coordinates_[1];
   float z = coordinates_[2];
   coordinates_[1] =
-      y * cos(transform_["rotateX"]) + z * sin(transform_["rotateX"]);
+      y * cos(transform_["rotateX"] * k) + z * sin(transform_["rotateX"] * k);
   coordinates_[2] =
-      y * sin(transform_["rotateX"]) + z * cos(transform_["rotateX"]);
+      y * sin(transform_["rotateX"] * k) + z * cos(transform_["rotateX"] * k);
 }
 
 void Model::RotateTransformY() {
   float x = coordinates_[0];
   float z = coordinates_[2];
   coordinates_[0] =
-      x * cos(transform_["rotateY"]) + z * sin(transform_["rotateY"]);
+      x * cos(transform_["rotateY"] * k) + z * sin(transform_["rotateY"] * k);
   coordinates_[2] =
-      -x * sin(transform_["rotateY"]) + z * cos(transform_["rotateY"]);
+      -x * sin(transform_["rotateY"] * k) + z * cos(transform_["rotateY"] * k);
 }
 
 void Model::RotateTransformZ() {
   float x = coordinates_[0];
   float y = coordinates_[1];
   coordinates_[0] =
-      x * cos(transform_["rotateZ"]) - y * sin(transform_["rotateZ"]);
+      x * cos(transform_["rotateZ"] * k) - y * sin(transform_["rotateZ"] * k);
   coordinates_[1] =
-      -x * sin(transform_["rotateZ"]) + y * cos(transform_["rotateZ"]);
+      -x * sin(transform_["rotateZ"] * k) + y * cos(transform_["rotateZ"] * k);
 }
 
 void Model::TransformVectorPolygons() {
