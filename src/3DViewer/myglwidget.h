@@ -15,13 +15,12 @@
 #include <QVector>
 #include <QWidget>
 #include <QtOpenGL>
-
-#include <iostream>
 #include <algorithm>
+#include <iostream>
 
 #include "controller.h"
-#include "object.h"
 #include "model.h"
+#include "object.h"
 #include "parser.h"
 
 #if defined(__APPLE__)
@@ -32,24 +31,20 @@
 #include <GL/glu.h>
 #endif
 
-class MyGLWidget : public QOpenGLWidget, protected QOpenGLFunctions
-{
-public:
+class MyGLWidget : public QOpenGLWidget, protected QOpenGLFunctions {
+ public:
   MyGLWidget(QWidget *parent = nullptr);
   ~MyGLWidget();
   void SetController(s21::Controller *controller);
 
-protected:
+ protected:
   void initializeGL() override;
   void paintGL() override;
 
-
-private:
+ private:
   void draw();
   void LineDisplayMethod();
   void PointDisplayMethod();
-
-
 
   bool flag_open_ = false;
   s21::Controller *controller_;
@@ -64,13 +59,12 @@ private:
   QPoint lastPos;
   int scale;
   QVector3D rotationAxis{1.0f, 1.0f, 0.0f};
-    qreal rotationAngle{0.0};
+  qreal rotationAngle{0.0};
 
-    void timerEvent(QTimerEvent* event) override {
-        Q_UNUSED(event);
-        rotationAngle += 1.0;
-        update();
-    }
-
+  void timerEvent(QTimerEvent *event) override {
+    Q_UNUSED(event);
+    rotationAngle += 1.0;
+    update();
+  }
 };
-#endif // MYGLWIDGET_H
+#endif  // MYGLWIDGET_H

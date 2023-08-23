@@ -97,10 +97,8 @@ style:
 
 style_fix:
 	cp ../materials/linters/.clang-format ./
-	clang-format -i --style=google ./*.c ./*.h
-	clang-format -i --style=google ./leaks/*.c
-	clang-format -i --style=google ./$(PROJECT_NAME)/*.cpp ./$(PROJECT_NAME)/*.h
-	clang-format -i --style=google ./tests/*.c
+	clang-format -i --style=google ./*/*.cc ./*/*.h
+
 	rm .clang-format
 
 valgrind: ./leaks/test.c parser_coordinates.c  s21_affine.c s21_matrix.c s21_obj.c

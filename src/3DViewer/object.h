@@ -5,22 +5,18 @@
 
 #include "s21_matrix_oop.h"
 
-namespace s21
-{
-   struct Poligon
-  {
-    std::vector<int> vertexes;
-  } ;
+namespace s21 {
+struct Poligon {
+  std::vector<int> vertexes;
+};
 
+struct Object {
+  int polygon_count_ = 0;
+  int vertex_count_ = 0;
+  std::vector<float> vertexes_;
+  std::vector<Poligon> polygons_;
+};
 
-  struct Object
-  {
-    int polygon_count_ = 0;
-    int vertex_count_ = 0;
-    std::vector<float> vertexes_;
-    std::vector<Poligon> polygons_;
-  };
+}  // namespace s21
 
-} // namespace s21
-
-#endif // SRC_OBJECT_H_
+#endif  // SRC_OBJECT_H_
