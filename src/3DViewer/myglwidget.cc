@@ -7,12 +7,8 @@ using s21::ElementType::kElementBack;
 using s21::ElementType::kElementLine;
 using s21::ElementType::kElementTop;
 
-MyGLWidget::MyGLWidget(QWidget *parent) : QOpenGLWidget(parent) {
-  rotationX = 0;
-  rotationY = 0;
-  rotationZ = 0;
-  scale = 1;
-}
+MyGLWidget::MyGLWidget(QWidget *parent)
+    : QOpenGLWidget(parent), controller_(nullptr) {}
 
 MyGLWidget::~MyGLWidget() {}
 
@@ -31,30 +27,15 @@ void MyGLWidget::paintGL() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   CoordinateAxis();
   if (flag_open_ == true) {
-    draw();
+    Draw();
   }
 }
 
-void MyGLWidget::draw() {
-  s21::FactoryColorSetting factory_color_setting;
-  factory_color_setting.SelectElementType(
+void MyGLWidget::Draw() {
+  s21::FactoryColorSetting::SelectElementType(
       kElementBack, controller_->get_settings_color("color_back"));
   GLfloat *vertices = controller_->get_vertices();
   GLuint *indices = controller_->get_indices();
-   std::cout << "=====================================================" <<
-   std::endl; std::cout << "vertices.size() = " <<
-   controller_->get_vertex_count() * 3 << std::endl; std::cout <<
-   "indices.size() = " << controller_->get_indices_size() << std::endl; for
-   (size_t i = 0; i < controller_->get_vertex_count() * 3; i++)
-   {
-     std::cout << "vertices  " << i << " =  " << vertices[i] << std::endl;
-   }
-   for (size_t i = 0; i < controller_->get_indices_size(); i++)
-   {
-     std::cout << "indices  " << i << " = " << indices[i] << std::endl;
-   }
-     std::cout << "=====================================================" <<
-     std::endl;
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -68,12 +49,12 @@ void MyGLWidget::draw() {
   LineDisplayMethod();
   PointDisplayMethod();
   glEnableClientState(GL_VERTEX_ARRAY);
-  factory_color_setting.SelectElementType(
+  s21::FactoryColorSetting::SelectElementType(
       kElementTop, controller_->get_settings_color("color_top"));
   if (controller_->get_settings("vertex_display_method") != 2) {
     glDrawArrays(GL_POINTS, 0, controller_->get_vertex_count());
   }
-  factory_color_setting.SelectElementType(
+  s21::FactoryColorSetting::SelectElementType(
       kElementLine, controller_->get_settings_color("color_line"));
   glDrawElements(GL_LINES, controller_->get_indices_size(), GL_UNSIGNED_INT,
                  indices);
@@ -103,16 +84,6 @@ void MyGLWidget::ProjectionDisplayMethod() {
   int w = this->width();
   int h = this->height();
   QVector2D prop = QVector2D(w, h).normalized();
-//  int side = fmax(w, h);
-//  int x = 0;
-//  int y = 0;
-//  if (w < h) {
-//    x = (w - h) / 2;
-//  }
-//  if (h < w) {
-//    y = (h - w) / 2;
-//  }
-//  glViewport(x, y, side * 2, side * 2);
   if (controller_->get_settings("type_of_projection") == 0) {
     glOrtho(-1.0, 1.0, -1.0, 1.0, -5.0, 5.0);
   } else {

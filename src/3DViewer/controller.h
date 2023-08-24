@@ -13,7 +13,7 @@ namespace s21 {
 class Controller {
  public:
   Controller() = delete;
-  inline Controller(Model *model) : model_(model) {}
+  inline explicit Controller(Model *model) : model_(model) {}
   Controller(const Controller &) = delete;
   Controller(Controller &&) = delete;
   ~Controller() = default;
@@ -23,27 +23,27 @@ class Controller {
   inline void set_settings(std::string key, int value) {
     setting_.set_settings(key, value);
   }
-  inline int get_settings(std::string key) {
+  inline int get_settings(std::string key) const {
     return setting_.get_settings(key);
   }
-  inline void set_settings_color(std::string key, QColor color) {
+  inline void set_settings_color(std::string key, QColor color) const {
     setting_.set_settings_color(key, color);
   }
-  inline void set_transform(std::string key, float value) {
+  inline void set_transform(std::string key, float value) const {
     model_->set_transform(key, value);
   }
-  inline float get_transform(std::string key) {
+  inline float get_transform(std::string key) const {
     return model_->get_transform(key);
   }
-  inline std::vector<float> get_settings_color(std::string key) {
+  inline std::vector<float> get_settings_color(std::string key) const {
     return setting_.get_settings_color(key);
   }
   inline float *get_vertices() { return model_->get_vertices(); }
-  inline uint *get_indices() { return model_->get_indices(); }
-  inline uint get_vertex_count() { return model_->get_vertex_count(); }
-  inline uint get_polygon_count() { return model_->get_polygon_count(); }
-  inline size_t get_indices_size() { return model_->get_indices_size(); }
-  inline bool get_error() { return model_->get_error(); }
+  inline uint *get_indices() const { return model_->get_indices(); }
+  inline uint get_vertex_count() const { return model_->get_vertex_count(); }
+  inline uint get_polygon_count() const { return model_->get_polygon_count(); }
+  inline size_t get_indices_size() const { return model_->get_indices_size(); }
+  inline bool get_error() const { return model_->get_error(); }
 
  private:
   Model *model_;

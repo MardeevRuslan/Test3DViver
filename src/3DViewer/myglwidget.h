@@ -43,31 +43,12 @@ class MyGLWidget : public QOpenGLWidget, protected QOpenGLFunctions {
   void paintGL() override;
 
  private:
-  void draw();
+  void Draw();
   void LineDisplayMethod();
   void PointDisplayMethod();
   void ProjectionDisplayMethod();
   void CoordinateAxis();
-
   bool flag_open_ = false;
   s21::Controller *controller_;
-  GLfloat rotationX;
-  GLfloat rotationY;
-  GLfloat rotationZ;
-  GLfloat camX;
-  GLfloat camY;
-  GLfloat camZ;
-  GLfloat ScrWidth;
-  GLfloat ScrHeight;
-  QPoint lastPos;
-  int scale;
-  QVector3D rotationAxis{1.0f, 1.0f, 0.0f};
-  qreal rotationAngle{0.0};
-
-  void timerEvent(QTimerEvent *event) override {
-    Q_UNUSED(event);
-    rotationAngle += 1.0;
-    update();
-  }
 };
 #endif  // CPP4_3DVIWER_3DVIEWER_MYGLWIDGET_H_

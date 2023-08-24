@@ -24,21 +24,21 @@ class Model {
  public:
   Model();
   Model(const Model &) = delete;
-  Model(Model &&) = default;
+  Model(Model &&) = delete;
   Model &operator=(const Model &) = delete;
-  Model &operator=(Model &&) = default;
+  Model &operator=(Model &&) = delete;
   ~Model();
 
  public:
-  int get_polygon_count();
-  int get_vertex_count();
+  int get_polygon_count() const;
+  int get_vertex_count() const;
   void set_transform(std::string key, float value);
-  float get_transform(std::string key);
-  std::vector<int> get_poligon(int i);
+  float get_transform(std::string key) const;
+  std::vector<int> get_poligon(int i) const;
   float *get_vertices();
-  uint *get_indices();
-  size_t get_indices_size() { return vector_poligons_.size(); }
-  bool get_error() { return error_; }
+  uint *get_indices() const;
+  size_t get_indices_size() const { return vector_poligons_.size(); }
+  bool get_error() const { return error_; }
 
  public:
   void WorkingModel(std::string filename);

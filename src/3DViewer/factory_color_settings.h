@@ -10,15 +10,15 @@ enum ElementType { kElementBack, kElementLine, kElementTop };
 
 class FactoryColorSetting {
  public:
-  FactoryColorSetting() = default;
+  FactoryColorSetting() = delete;
   FactoryColorSetting(const FactoryColorSetting &) = delete;
   FactoryColorSetting(FactoryColorSetting &&) = delete;
   FactoryColorSetting &operator=(const FactoryColorSetting &) = delete;
   FactoryColorSetting &operator=(FactoryColorSetting &&) = delete;
   ~FactoryColorSetting() = default;
 
-  inline void SelectElementType(const ElementType type,
-                                std::vector<float> color_vector) noexcept {
+  static inline void SelectElementType(
+      const ElementType type, std::vector<float> color_vector) noexcept {
     switch (type) {
       case kElementBack: {
         ColorSettingBack color_setting_back;

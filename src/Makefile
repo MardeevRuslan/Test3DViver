@@ -82,23 +82,17 @@ gcov_report : ./tests/$(PROJECT_NAME)_test.c parser_coordinates.c s21_affine.c s
 	open GCOV_REPORT/index.html
 
 check:
-	cppcheck -q --enable=all --inconclusive --std=c11 --template='{id} {file}:{line} {message}' --suppress=missingIncludeSystem ./*.c ./*.h
-	cppcheck -q --enable=all --inconclusive --std=c11 --template='{id} {file}:{line} {message}' --suppress=missingIncludeSystem ./$(PROJECT_NAME)/*.cpp ./$(PROJECT_NAME)/*.h
-	cppcheck -q --enable=all --inconclusive --std=c11 --template='{id} {file}:{line} {message}' --suppress=missingIncludeSystem ./tests/*.c
+	cppcheck -q  --enable=all --inconclusive --language=c++ --template='{id} {file}:{line} {message}' --suppress=missingIncludeSystem ./*/*.cc ./*/*.h
 	
-
+	
 style:
 	cp ../materials/linters/.clang-format ./
-	clang-format -n --style=google ./*.c ./*.h
-	clang-format -n --style=google ./leaks/*.c
-	clang-format -n --style=google ./$(PROJECT_NAME)/*.cpp ./$(PROJECT_NAME)/*.h
-	clang-format -n --style=google ./tests/*.c
+	clang-format -n --style=google ./*/*.cc ./*/*.h
 	rm .clang-format
 
 style_fix:
 	cp ../materials/linters/.clang-format ./
 	clang-format -i --style=google ./*/*.cc ./*/*.h
-
 	rm .clang-format
 
 valgrind: ./leaks/test.c parser_coordinates.c  s21_affine.c s21_matrix.c s21_obj.c

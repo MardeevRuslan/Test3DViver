@@ -56,19 +56,14 @@ MainWindow::~MainWindow() { delete ui; }
 void MainWindow::on_Open_file_clicked() {
   filename_qstring_ = QFileDialog::getOpenFileName(this, "Choose obj file",
                                                    QDir::homePath(), "*.obj");
-  std::string filename = filename_qstring_.toStdString();
-  std::cout << " 1 " << filename << std::endl;
+  const std::string filename = filename_qstring_.toStdString();
   controller_->DataTransmission(filename);
-  std::cout << " 2 " << controller_->get_error() << std::endl;
   flag_open_ = controller_->get_error();
-  std::cout << " 2.1 " << controller_->get_error() << std::endl;
   if (flag_open_ == true) {
-      std::cout << " 2.2 " << controller_->get_error() << std::endl;
     SetDefaultValues();
     ui->openGLWidget->SetController(controller_);
     ui->openGLWidget->update();
   }
-  std::cout << " 2.3 " << controller_->get_error() << std::endl;
   DataOutputToScreen();
 }
 
@@ -255,7 +250,6 @@ void MainWindow::on_ProjTypeCombo_currentIndexChanged(int index) {
 
 void MainWindow::DataOutputToScreen() {
   if (flag_open_ == true) {
-     std::cout << " 3 " << flag_open_ << std::endl;
     QString info = "info about model:";
     info.append("\nFilename: " + filename_qstring_);
     info.append("\nVertexes: " +
@@ -264,7 +258,6 @@ void MainWindow::DataOutputToScreen() {
                 QString::number(controller_->get_polygon_count()));
     ui->infolabel->setText(info);
   } else {
-      std::cout << " 4 " << flag_open_ << std::endl;
     ui->infolabel->clear();
     ui->infolabel->setText("Начальник, с Вашим файлом что-то не так");
   }
@@ -286,7 +279,7 @@ void MainWindow::DefaultSettings() {
 }
 void MainWindow::on_save_bmp_clicked() {
   if (flag_open_ == true) {
-    QString path = select_dir();
+    QString path = SelectDir();
     ui->openGLWidget->grab().save(path + "/" + QDate::currentDate().toString() +
                                   " " + QTime::currentTime().toString() +
                                   ".bmp");
@@ -295,7 +288,7 @@ void MainWindow::on_save_bmp_clicked() {
 
 void MainWindow::on_save_jpeg_clicked() {
   if (flag_open_ == true) {
-    QString path = select_dir();
+    QString path = SelectDir();
     ui->openGLWidget->grab().save(path + "/" + QDate::currentDate().toString() +
                                   " " + QTime::currentTime().toString() +
                                   ".jpeg");
@@ -309,19 +302,19 @@ void MainWindow::on_save_gif_clicked() {
     if (GifBegin(&writer, fileNameRec.toLatin1().data(), 640, 480, 10)) {
       time = QTime::currentTime();
       timer = new QTimer(this);
-      connect(timer, SIGNAL(timeout()), this, SLOT(byld_gif()));
+      connect(timer, SIGNAL(timeout()), this, SLOT(ByldGif()));
       timer->start(100);
     }
   }
 }
 
-QString MainWindow::select_dir() {
+QString MainWindow::SelectDir() {
   return QFileDialog::getExistingDirectory(
       this, tr("Open Directory"), QDir::homePath(),
       QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
 }
 
-void MainWindow::byld_gif() {
+void MainWindow::ByldGif() {
   QImage img = ui->openGLWidget->grabFramebuffer().scaled(
       640, 480, Qt::KeepAspectRatio, Qt::SmoothTransformation);
   GifWriteFrame(&writer,

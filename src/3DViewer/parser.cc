@@ -1,7 +1,7 @@
 #include "parser.h"
 
 namespace s21 {
-bool Parser::ParserVetexAndFace(std::string filename, Object *object) {
+bool Parser::ParserVetexAndFace(const std::string &filename, Object *object) {
   OpenFile(filename);
   my_object_ = object;
   if (file_.is_open()) {
@@ -25,7 +25,7 @@ bool Parser::ParserVetexAndFace(std::string filename, Object *object) {
   }
 }
 
-void Parser::OpenFile(std::string filename) { file_.open(filename); }
+void Parser::OpenFile(const std::string filename) { file_.open(filename); }
 
 void Parser::ParserFace(std::string line) {
   my_object_->polygon_count_++;

@@ -72,9 +72,9 @@ class MainWindow : public QMainWindow {
 
   void on_save_gif_clicked();
 
-  QString select_dir();
+  QString SelectDir();
 
-  void byld_gif();
+  void ByldGif();
 
  private:
   Ui::MainWindow *ui;
