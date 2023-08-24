@@ -1,5 +1,5 @@
-#ifndef SRC_SETTING_H_
-#define SRC_SETTING_H_
+#ifndef CPP4_3DVIWER_3DVIEWER_SETTING_H_
+#define CPP4_3DVIWER_3DVIEWER_SETTING_H_
 
 #include <QColor>
 #include <QCoreApplication>
@@ -13,32 +13,36 @@
 namespace s21 {
 class Setting : public QSettings {
  public:
-  static Setting &get_instance() {
+  static inline Setting &get_instance() {
     static Setting instance;
     instance.ReadSettings();
     return instance;
   }
-  void set_settings(std::string key, int value) {
+  void inline set_settings(std::string key, int value) noexcept {
     settings_[key] = value;
     setValue(QString::fromStdString(key), value);
   }
-  void set_settings_color(std::string key, QColor color) {
+  void inline set_settings_color(std::string key, QColor color) noexcept {
     color_[key] = color;
     setValue(QString::fromStdString(key), color);
   }
-  std::vector<float> get_settings_color(std::string key) {
+  std::vector<float> inline get_settings_color(std::string key) noexcept {
     QColor color = color_[key];
     return {color.redF(), color.greenF(), color.blueF()};
   }
-  int get_settings(std::string key) { return settings_[key]; }
+  int inline get_settings(std::string key) noexcept { return settings_[key]; }
 
  private:
   std::map<std::string, int> settings_;
   std::map<std::string, QColor> color_;
-  Setting() : QSettings("Sommerha", "3DViewer") {}
+  explicit Setting() noexcept : QSettings("Sommerha", "3DViewer") {}
   Setting(const Setting &) = delete;
   Setting &operator=(const Setting &) = delete;
-  void ReadSettings() {
+  Setting(Setting &&) = delete;
+  Setting &operator=(Setting &&) = delete;
+  ~Setting() = default;
+
+  void inline ReadSettings() noexcept {
     settings_.clear();
     settings_["vertex_display_method"] =
         this->value("vertex_display_method", 0).toInt();
@@ -57,4 +61,4 @@ class Setting : public QSettings {
   }
 };
 }  // namespace s21
-#endif  // SRC_SETTING_H_
+#endif  // CPP4_3DVIWER_3DVIEWER_SETTING_H_

@@ -1,9 +1,7 @@
-#ifndef SRC_OBJECT_H_
-#define SRC_OBJECT_H_
+#ifndef CPP4_3DVIWER_3DVIEWER_OBJECT_H_
+#define CPP4_3DVIWER_3DVIEWER_OBJECT_H_
 
 #include <vector>
-
-#include "s21_matrix_oop.h"
 
 namespace s21 {
 struct Poligon {
@@ -19,4 +17,4 @@ struct Object {
 
 }  // namespace s21
 
-#endif  // SRC_OBJECT_H_
+#endif  // CPP4_3DVIWER_3DVIEWER_OBJECT_H_

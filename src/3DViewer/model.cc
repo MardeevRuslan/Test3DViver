@@ -4,8 +4,9 @@
 #include "mainwindow.h"
 
 namespace s21 {
-const float pi = 3.141593;
-const float k = pi / 180;
+const float kValuePI = 3.141593;
+const float kDegreesToRadians = kValuePI / 180;
+const int kSmoothnessOfMovement = 25;
 
 Model::Model() { my_object_ = new Object(); };
 
@@ -62,11 +63,11 @@ void Model::ReadMapTransform() {
 void Model::ModelTransform() {
   for (size_t i = 0; i < vector_koordinate_.size() - 2; i += 3) {
     coordinates_[0] = vector_koordinate_[i] * transform_["scale"] +
-                      (transform_["translateX"] / 25);
+                      (transform_["translateX"] / kSmoothnessOfMovement);
     coordinates_[1] = vector_koordinate_[i + 1] * transform_["scale"] +
-                      (transform_["translateY"] / 25);
+                      (transform_["translateY"] / kSmoothnessOfMovement);
     coordinates_[2] = vector_koordinate_[i + 2] * transform_["scale"] +
-                      (transform_["translateZ"] / 25);
+                      (transform_["translateZ"] / kSmoothnessOfMovement);
     RotateTransformX();
     RotateTransformY();
     RotateTransformZ();
@@ -79,28 +80,28 @@ void Model::ModelTransform() {
 void Model::RotateTransformX() {
   float y = coordinates_[1];
   float z = coordinates_[2];
-  coordinates_[1] =
-      y * cos(transform_["rotateX"] * k) + z * sin(transform_["rotateX"] * k);
-  coordinates_[2] =
-      -y * sin(transform_["rotateX"] * k) + z * cos(transform_["rotateX"] * k);
+  coordinates_[1] = y * cos(transform_["rotateX"] * kDegreesToRadians) +
+                    z * sin(transform_["rotateX"] * kDegreesToRadians);
+  coordinates_[2] = -y * sin(transform_["rotateX"] * kDegreesToRadians) +
+                    z * cos(transform_["rotateX"] * kDegreesToRadians);
 }
 
 void Model::RotateTransformY() {
   float x = coordinates_[0];
   float z = coordinates_[2];
-  coordinates_[0] =
-      x * cos(transform_["rotateY"] * k) + z * sin(transform_["rotateY"] * k);
-  coordinates_[2] =
-      -x * sin(transform_["rotateY"] * k) + z * cos(transform_["rotateY"] * k);
+  coordinates_[0] = x * cos(transform_["rotateY"] * kDegreesToRadians) +
+                    z * sin(transform_["rotateY"] * kDegreesToRadians);
+  coordinates_[2] = -x * sin(transform_["rotateY"] * kDegreesToRadians) +
+                    z * cos(transform_["rotateY"] * kDegreesToRadians);
 }
 
 void Model::RotateTransformZ() {
   float x = coordinates_[0];
   float y = coordinates_[1];
-  coordinates_[0] =
-      x * cos(transform_["rotateZ"] * k) + y * sin(transform_["rotateZ"] * k);
-  coordinates_[1] =
-      -x * sin(transform_["rotateZ"] * k) + y * cos(transform_["rotateZ"] * k);
+  coordinates_[0] = x * cos(transform_["rotateZ"] * kDegreesToRadians) +
+                    y * sin(transform_["rotateZ"] * kDegreesToRadians);
+  coordinates_[1] = -x * sin(transform_["rotateZ"] * kDegreesToRadians) +
+                    y * cos(transform_["rotateZ"] * kDegreesToRadians);
 }
 
 void Model::TransformVectorPolygons() {

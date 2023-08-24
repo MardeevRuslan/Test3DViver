@@ -1,5 +1,5 @@
-#ifndef MYGLWIDGET_H
-#define MYGLWIDGET_H
+#ifndef CPP4_3DVIWER_3DVIEWER_MYGLWIDGET_H_
+#define CPP4_3DVIWER_3DVIEWER_MYGLWIDGET_H_
 
 #define GL_SILENCE_DEPRECATION
 
@@ -19,6 +19,7 @@
 #include <iostream>
 
 #include "controller.h"
+#include "factory_color_settings.h"
 #include "model.h"
 #include "object.h"
 #include "parser.h"
@@ -45,6 +46,7 @@ class MyGLWidget : public QOpenGLWidget, protected QOpenGLFunctions {
   void draw();
   void LineDisplayMethod();
   void PointDisplayMethod();
+  void ProjectionDisplayMethod();
   void CoordinateAxis();
 
   bool flag_open_ = false;
@@ -68,4 +70,4 @@ class MyGLWidget : public QOpenGLWidget, protected QOpenGLFunctions {
     update();
   }
 };
-#endif  // MYGLWIDGET_H
+#endif  // CPP4_3DVIWER_3DVIEWER_MYGLWIDGET_H_

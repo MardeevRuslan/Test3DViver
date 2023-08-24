@@ -1,5 +1,5 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef CPP4_3DVIWER_3DVIEWER_MAINWINDOW_H_
+#define CPP4_3DVIWER_3DVIEWER_MAINWINDOW_H_
 
 #include <QColorDialog>
 #include <QMainWindow>
@@ -11,7 +11,6 @@
 #include "myglwidget.h"
 #include "object.h"
 #include "parser.h"
-#include "s21_matrix_oop.h"
 #include "setting.h"
 
 QT_BEGIN_NAMESPACE
@@ -90,4 +89,4 @@ class MainWindow : public QMainWindow {
   void SetDefaultValues();
   QColor ShowDialog(QPoint point);
 };
-#endif  // MAINWINDOW_H
+#endif  // CPP4_3DVIWER_3DVIEWER_MAINWINDOW_H_

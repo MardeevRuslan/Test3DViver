@@ -1,5 +1,5 @@
-#ifndef SRC_CONTROLLER_H_
-#define SRC_CONTROLLER_H_
+#ifndef CPP4_3DVIWER_3DVIEWER_CONTROLLER_H_
+#define CPP4_3DVIWER_3DVIEWER_CONTROLLER_H_
 
 #include <cstdio>
 #include <string>
@@ -50,4 +50,4 @@ class Controller {
 };
 }  // namespace s21
 
-#endif  // SRC_CONTROLLER_H_
+#endif  // CPP4_3DVIWER_3DVIEWER_CONTROLLER_H_

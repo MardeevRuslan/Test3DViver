@@ -28,11 +28,9 @@ set(PROJECT_SOURCES
         parser.h
         myglwidget.h
         myglwidget.cc
-        s21_matrix_constructor.cc
-        s21_matrix_oop.cc
-        s21_matrix_operator.cc
-        s21_matrix_oop.h
         setting.h
+        color_setting_class.h
+        factory_color_settings.h
         ../gif.h
 )
 

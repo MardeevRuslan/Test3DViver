@@ -3,6 +3,10 @@
 #include "./ui_mainwindow.h"
 #include "mainwindow.h"
 
+using s21::ElementType::kElementBack;
+using s21::ElementType::kElementLine;
+using s21::ElementType::kElementTop;
+
 MyGLWidget::MyGLWidget(QWidget *parent) : QOpenGLWidget(parent) {
   rotationX = 0;
   rotationY = 0;
@@ -32,10 +36,9 @@ void MyGLWidget::paintGL() {
 }
 
 void MyGLWidget::draw() {
-  std::vector<float> color_vector =
-      controller_->get_settings_color("color_back");
-  glClearColor(color_vector[0], color_vector[1], color_vector[2], 0.0f);
-
+  s21::FactoryColorSetting factory_color_setting;
+  factory_color_setting.SelectElementType(
+      kElementBack, controller_->get_settings_color("color_back"));
   GLfloat *vertices = controller_->get_vertices();
   GLuint *indices = controller_->get_indices();
   // std::cout << "=====================================================" <<
@@ -55,29 +58,23 @@ void MyGLWidget::draw() {
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  glOrtho(-1.0, 1.0, -1.0, 1.0, -5.0, 5.0);
-  glTranslatef(0.0, 0.0, -2.0);
+  ProjectionDisplayMethod();
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  // glRotatef(rotationX, 1.0, 0.0, 0.0);
-  // glRotatef(rotationY, 0.0, 1.0, 0.0);
-  // glRotatef(rotationZ, 0.0, 0.0, 1.0);
 
   glVertexPointer(3, GL_FLOAT, 0, vertices);
   glPointSize(controller_->get_settings("point_size"));
   glLineWidth(controller_->get_settings("line_width"));
-  // LineDisplayMethod();
-  // PointDisplayMethod();
+  LineDisplayMethod();
+  PointDisplayMethod();
   glEnableClientState(GL_VERTEX_ARRAY);
-  // glStencilOp(1, 1, 1);
-  // glTranslatef(0, 0, 0);
-  color_vector = controller_->get_settings_color("color_top");
-  glColor3d(color_vector[0], color_vector[1], color_vector[2]);
+  factory_color_setting.SelectElementType(
+      kElementTop, controller_->get_settings_color("color_top"));
   if (controller_->get_settings("vertex_display_method") != 2) {
     glDrawArrays(GL_POINTS, 0, controller_->get_vertex_count());
   }
-  color_vector = controller_->get_settings_color("color_line");
-  glColor3d(color_vector[0], color_vector[1], color_vector[2]);
+  factory_color_setting.SelectElementType(
+      kElementLine, controller_->get_settings_color("color_line"));
   glDrawElements(GL_LINES, controller_->get_indices_size(), GL_UNSIGNED_INT,
                  indices);
   glDisableClientState(GL_VERTEX_ARRAY);
@@ -102,6 +99,30 @@ void MyGLWidget::PointDisplayMethod() {
   }
 }
 
+void MyGLWidget::ProjectionDisplayMethod() {
+  int w = this->width();
+  int h = this->height();
+  QVector2D prop = QVector2D(w, h).normalized();
+  int side = fmax(w, h);
+  int x = 0;
+  int y = 0;
+  if (w < h) {
+    x = (w - h) / 2;
+  }
+  if (h < w) {
+    y = (h - w) / 2;
+  }
+  glViewport(x, y, side * 2, side * 2);
+  if (controller_->get_settings("type_of_projection") == 0) {
+    glOrtho(-1.0, 1.0, -1.0, 1.0, -5.0, 5.0);
+  } else {
+    const qreal zNear = 0.01, zFar = 200, fov = 45.0;
+    float aspect = prop.x() / prop.y();
+    gluPerspective(fov * aspect, aspect, zNear, zFar);
+  }
+  glTranslatef(0.0, 0.0, -2.0);
+}
+
 void MyGLWidget::CoordinateAxis() {
   glEnable(GL_LINE_STIPPLE);
   glLineStipple(20, 0x3333);
@@ -110,11 +131,9 @@ void MyGLWidget::CoordinateAxis() {
   glColor3f(0.2, 0.8, 0.8);
   glVertex3f(0.0f, -10000.0f, 0.0f);
   glVertex3f(0.0f, 10000.0f, 0.0f);
-
   glColor3f(0.2, 0.8, 0.8);
   glVertex3f(0.0f, 0.0f, -10000.0f);
   glVertex3f(0.0f, 0.0f, 10000.0f);
-
   glColor3f(0.2, 0.8, 0.8);
   glVertex3f(-10000.0f, 0.0f, 0.0f);
   glVertex3f(10000.0f, 0.0f, .0f);

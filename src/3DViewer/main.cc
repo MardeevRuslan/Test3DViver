@@ -2,6 +2,7 @@
 #include <QSettings>
 
 #include "controller.h"
+#include "factory_color_settings.h"
 #include "mainwindow.h"
 #include "model.h"
 #include "object.h"

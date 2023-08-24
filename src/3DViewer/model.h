@@ -1,5 +1,7 @@
-#ifndef SRC_MODEL_H_
-#define SRC_MODEL_H_
+#ifndef CPP4_3DVIWER_3DVIEWER_MODEL_H_
+#define CPP4_3DVIWER_3DVIEWER_MODEL_H_
+
+#define GL_SILENCE_DEPRECATION
 
 #include <array>
 #include <cstdio>
@@ -57,4 +59,4 @@ class Model {
 };
 }  // namespace s21
 
-#endif  // SRC_MODEL_H_
+#endif  // CPP4_3DVIWER_3DVIEWER_MODEL_H_

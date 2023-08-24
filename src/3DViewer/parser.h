@@ -1,14 +1,14 @@
-#ifndef SRC_PARSER_H_
-#define SRC_PARSER_H_
+#ifndef CPP4_3DVIWER_3DVIEWER_PARSER_H_
+#define CPP4_3DVIWER_3DVIEWER_PARSER_H_
 
 #include <cstdio>
 #include <cstring>
 #include <fstream>
+#include <iostream>
 #include <sstream>
 
 #include "model.h"
 #include "object.h"
-#include "s21_matrix_oop.h"
 
 namespace s21 {
 class Parser {
@@ -16,8 +16,8 @@ class Parser {
   Parser() = default;
   Parser(const Parser &) = delete;
   Parser(Parser &&) = delete;
-  // Parser &operator=(const Parser &) = delete;
-  // Parser &operator=(Parser &&) = delete;
+  Parser &operator=(const Parser &) = delete;
+  Parser &operator=(Parser &&) = delete;
   ~Parser() = default;
   void ParserVetexAndFace(std::string filename, Object *object);
 
@@ -33,4 +33,4 @@ class Parser {
 };
 }  // namespace s21
 
-#endif  // SRC_PARSER_H_
+#endif  // CPP4_3DVIWER_3DVIEWER_PARSER_H_
