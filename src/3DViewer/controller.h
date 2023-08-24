@@ -43,6 +43,7 @@ class Controller {
   inline uint get_vertex_count() { return model_->get_vertex_count(); }
   inline uint get_polygon_count() { return model_->get_polygon_count(); }
   inline size_t get_indices_size() { return model_->get_indices_size(); }
+  inline bool get_error() { return model_->get_error(); }
 
  private:
   Model *model_;

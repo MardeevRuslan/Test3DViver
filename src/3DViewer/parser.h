@@ -19,7 +19,7 @@ class Parser {
   Parser &operator=(const Parser &) = delete;
   Parser &operator=(Parser &&) = delete;
   ~Parser() = default;
-  void ParserVetexAndFace(std::string filename, Object *object);
+  bool ParserVetexAndFace(std::string filename, Object *object);
 
  private:
   void OpenFile(std::string filename);

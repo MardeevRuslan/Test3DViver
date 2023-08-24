@@ -41,20 +41,20 @@ void MyGLWidget::draw() {
       kElementBack, controller_->get_settings_color("color_back"));
   GLfloat *vertices = controller_->get_vertices();
   GLuint *indices = controller_->get_indices();
-  // std::cout << "=====================================================" <<
-  // std::endl; std::cout << "vertices.size() = " <<
-  // controller_->get_vertex_count() * 3 << std::endl; std::cout <<
-  // "indices.size() = " << controller_->get_indices_size() << std::endl; for
-  // (size_t i = 0; i < controller_->get_vertex_count() * 3; i++)
-  // {
-  //   std::cout << "vertices  " << i << " =  " << vertices[i] << std::endl;
-  // }
-  // for (size_t i = 0; i < controller_->get_indices_size(); i++)
-  // {
-  //   std::cout << "indices  " << i << " = " << indices[i] << std::endl;
-  // }
-  //   std::cout << "=====================================================" <<
-  //   std::endl;
+   std::cout << "=====================================================" <<
+   std::endl; std::cout << "vertices.size() = " <<
+   controller_->get_vertex_count() * 3 << std::endl; std::cout <<
+   "indices.size() = " << controller_->get_indices_size() << std::endl; for
+   (size_t i = 0; i < controller_->get_vertex_count() * 3; i++)
+   {
+     std::cout << "vertices  " << i << " =  " << vertices[i] << std::endl;
+   }
+   for (size_t i = 0; i < controller_->get_indices_size(); i++)
+   {
+     std::cout << "indices  " << i << " = " << indices[i] << std::endl;
+   }
+     std::cout << "=====================================================" <<
+     std::endl;
 
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
@@ -103,16 +103,16 @@ void MyGLWidget::ProjectionDisplayMethod() {
   int w = this->width();
   int h = this->height();
   QVector2D prop = QVector2D(w, h).normalized();
-  int side = fmax(w, h);
-  int x = 0;
-  int y = 0;
-  if (w < h) {
-    x = (w - h) / 2;
-  }
-  if (h < w) {
-    y = (h - w) / 2;
-  }
-  glViewport(x, y, side * 2, side * 2);
+//  int side = fmax(w, h);
+//  int x = 0;
+//  int y = 0;
+//  if (w < h) {
+//    x = (w - h) / 2;
+//  }
+//  if (h < w) {
+//    y = (h - w) / 2;
+//  }
+//  glViewport(x, y, side * 2, side * 2);
   if (controller_->get_settings("type_of_projection") == 0) {
     glOrtho(-1.0, 1.0, -1.0, 1.0, -5.0, 5.0);
   } else {

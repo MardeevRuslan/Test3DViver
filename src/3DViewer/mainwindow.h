@@ -79,13 +79,14 @@ class MainWindow : public QMainWindow {
  private:
   Ui::MainWindow *ui;
   bool flag_open_ = false;
+  QString filename_qstring_;
 
   QTimer *timer;
   QTime time;
   QString fileNameRec;
   s21::Controller *controller_ = nullptr;
   void DefaultSettings();
-  void DataOutputToScreen(std::string filename);
+  void DataOutputToScreen();
   void SetDefaultValues();
   QColor ShowDialog(QPoint point);
 };

@@ -54,15 +54,22 @@ MainWindow::MainWindow(QWidget *parent, s21::Controller *controller)
 MainWindow::~MainWindow() { delete ui; }
 
 void MainWindow::on_Open_file_clicked() {
-  QString filename_qstring = QFileDialog::getOpenFileName(
-      this, "Choose obj file", QDir::homePath(), "*.obj");
-  std::string filename = filename_qstring.toStdString();
+  filename_qstring_ = QFileDialog::getOpenFileName(this, "Choose obj file",
+                                                   QDir::homePath(), "*.obj");
+  std::string filename = filename_qstring_.toStdString();
+  std::cout << " 1 " << filename << std::endl;
   controller_->DataTransmission(filename);
-  flag_open_ = true;
-  SetDefaultValues();
-  ui->openGLWidget->SetController(controller_);
-  ui->openGLWidget->update();
-  DataOutputToScreen(filename);
+  std::cout << " 2 " << controller_->get_error() << std::endl;
+  flag_open_ = controller_->get_error();
+  std::cout << " 2.1 " << controller_->get_error() << std::endl;
+  if (flag_open_ == true) {
+      std::cout << " 2.2 " << controller_->get_error() << std::endl;
+    SetDefaultValues();
+    ui->openGLWidget->SetController(controller_);
+    ui->openGLWidget->update();
+  }
+  std::cout << " 2.3 " << controller_->get_error() << std::endl;
+  DataOutputToScreen();
 }
 
 void MainWindow::SetValX() {
@@ -246,13 +253,21 @@ void MainWindow::on_ProjTypeCombo_currentIndexChanged(int index) {
   }
 }
 
-void MainWindow::DataOutputToScreen(std::string filename) {
-  QString info = "info about model:";
-  info.append("\nFilename: " + QString::fromStdString(filename));
-  info.append("\nVertexes: " +
-              QString::number(controller_->get_vertex_count()));
-  info.append("\nFaces: " + QString::number(controller_->get_polygon_count()));
-  ui->infolabel->setText(info);
+void MainWindow::DataOutputToScreen() {
+  if (flag_open_ == true) {
+     std::cout << " 3 " << flag_open_ << std::endl;
+    QString info = "info about model:";
+    info.append("\nFilename: " + filename_qstring_);
+    info.append("\nVertexes: " +
+                QString::number(controller_->get_vertex_count()));
+    info.append("\nFaces: " +
+                QString::number(controller_->get_polygon_count()));
+    ui->infolabel->setText(info);
+  } else {
+      std::cout << " 4 " << flag_open_ << std::endl;
+    ui->infolabel->clear();
+    ui->infolabel->setText("Начальник, с Вашим файлом что-то не так");
+  }
 }
 
 void MainWindow::DefaultSettings() {

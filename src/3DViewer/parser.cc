@@ -1,7 +1,7 @@
 #include "parser.h"
 
 namespace s21 {
-void Parser::ParserVetexAndFace(std::string filename, Object *object) {
+bool Parser::ParserVetexAndFace(std::string filename, Object *object) {
   OpenFile(filename);
   my_object_ = object;
   if (file_.is_open()) {
@@ -15,9 +15,13 @@ void Parser::ParserVetexAndFace(std::string filename, Object *object) {
       }
     }
     file_.close();
+    if (object->vertex_count_ == 0) {
+      return false;
+    }
     ReductionCoordinates();
+    return true;
   } else {
-    std::cerr << "Ошибка при открытии файла: " << filename << std::endl;
+    return false;
   }
 }
 

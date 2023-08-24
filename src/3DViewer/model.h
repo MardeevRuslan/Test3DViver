@@ -38,6 +38,7 @@ class Model {
   float *get_vertices();
   uint *get_indices();
   size_t get_indices_size() { return vector_poligons_.size(); }
+  bool get_error() { return error_; }
 
  public:
   void WorkingModel(std::string filename);
@@ -48,6 +49,7 @@ class Model {
   std::vector<float> vector_koordinate_;
   std::array<float, 3> coordinates_;
   std::vector<float> vector_poligons_;
+  bool error_ = true;
 
  private:
   void TransformVectorPolygons();
