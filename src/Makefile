@@ -3,7 +3,7 @@ GCC =  g++ -std=c++17
 LDFLAGS = -Wall -Werror -Wextra
 SOURCE = 3DViewer/main.cc 3DViewer/mainwindow.cc 3DViewer/model.cc 3DViewer/parser.cc 3DViewer/myglwidget.cc
 TEST = s21_test.cc
-GCOV = --coverage
+GCOV = -fprofile-arcs -ftest-coverage
 BUILD = build
 BUILD_DIR = ./build
 APP_DIR = ./app
@@ -75,13 +75,13 @@ dist:
 
 test: $(TEST)
 	rm -rf test
-	$(GCC) $(LDFLAGS)  $(TEST) 3DViewer/parser.cc $(LIBFLAGS) -o test 
+	$(GCC) $(LDFLAGS)  $(TEST) 3DViewer/parser.cc 3DViewer/model.cc  $(LIBFLAGS) -o test 
 	./test
 
 
 
-gcov_report:
-	$(GCC)  -I $(GCOV) $(TEST) $(SOURCE)  $(LIBFLAGS) -o test
+gcov_report: $(TEST) 3DViewer/parser.cc 3DViewer/model.cc
+	$(GCC) $(LDFLAGS)  $(TEST) 3DViewer/parser.cc 3DViewer/model.cc $(GCOV) $(LIBFLAGS) -o test 
 	./test
 	$(LCOV) 
 	genhtml ./coverage.info --output-directory ./report/
@@ -95,7 +95,7 @@ check:
 	rm .clang-format
 	
 leaks:
-	$(GCC)  $(LDFLAGS) $(SOURCE) $(TEST) $(LIBFLAGS) -o test 
+	$(GCC) $(LDFLAGS)  $(TEST) 3DViewer/parser.cc 3DViewer/model.cc  $(LIBFLAGS) -o test 
 	$(LEAKS)
 
 style_fix:
@@ -126,3 +126,4 @@ min:
 	
 
 .PHONY: all clean test gcov_report default clang_format valgrind leaks build install uninstall rebuild run dvi dist 
+

@@ -7,6 +7,8 @@
 #include <cstdio>
 #include <tuple>
 #include <map>
+#include <cstdint>
+
 
 #if defined(__APPLE__)
 #include <OpenGL/gl.h>
@@ -37,7 +39,7 @@ class Model {
   float get_transform(std::string key) const;
   std::vector<int> get_poligon(int i) const;
   float *get_vertices();
-  uint *get_indices() const;
+  GLuint *get_indices() const;
   size_t get_indices_size() const { return vector_poligons_.size(); }
   bool get_error() const { return error_; }
 
