@@ -6,8 +6,10 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <cmath>
+#include <algorithm>
 
-#include "model.h"
+// #include "model.h"
 #include "object.h"
 
 namespace s21 {

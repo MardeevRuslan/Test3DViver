@@ -6,6 +6,7 @@ GifWriter writer;
 
 MainWindow::MainWindow(QWidget *parent, s21::Controller *controller)
     : QMainWindow(parent), ui(new Ui::MainWindow()), controller_(controller) {
+ 
   ui->setupUi(this);
   DefaultSettings();
   connect(ui->XRotateDial, &QDial::valueChanged, this, &MainWindow::SetValX);
@@ -161,7 +162,7 @@ void MainWindow::SetScale() {
 void MainWindow::On_comboBox_currentIndexChanged(int index) {
   // index = 0 - сплошная, = 1 - пунктирная
   if (flag_open_ == true) {
-    controller_->set_settings("line_display_method", index);
+    controller_settings_.set_settings("line_display_method", index);
     ui->openGLWidget->update();
   }
 }
@@ -169,7 +170,7 @@ void MainWindow::On_comboBox_currentIndexChanged(int index) {
 void MainWindow::On_comboBox_top_currentIndexChanged(int index) {
   // index = 0 - круглая, = 1 - квадратная, = 2 - отсутствует
   if (flag_open_ == true) {
-    controller_->set_settings("vertex_display_method", index);
+    controller_settings_.set_settings("vertex_display_method", index);
     ui->openGLWidget->update();
   }
 }
@@ -177,7 +178,7 @@ void MainWindow::On_comboBox_top_currentIndexChanged(int index) {
 void MainWindow::On_horizontalSliderTypeLine_actionTriggered(int action) {
   if (flag_open_ == true) {
     ui->spinBoxTypeLine->setValue(ui->horizontalSliderTypeLine->value());
-    controller_->set_settings("line_width",
+    controller_settings_.set_settings("line_width",
                               ui->horizontalSliderTypeLine->value());
     ui->openGLWidget->update();
   }
@@ -191,7 +192,7 @@ void MainWindow::On_spinBoxTypeLine_valueChanged(int arg1) {
 void MainWindow::On_horizontalSliderTypeTop_actionTriggered(int action) {
   if (flag_open_ == true) {
     ui->spinBoxTypeTop->setValue(ui->horizontalSliderTypeTop->value());
-    controller_->set_settings("point_size",
+    controller_settings_.set_settings("point_size",
                               ui->horizontalSliderTypeTop->value());
     ui->openGLWidget->update();
   }
@@ -206,7 +207,7 @@ void MainWindow::On_pBColorTop_clicked() {
   QPushButton *clickedButton = qobject_cast<QPushButton *>(sender());
   QPoint point = clickedButton->mapToGlobal(clickedButton->pos());
   QColor color = ShowDialog(point);
-  controller_->set_settings_color("color_top", color);
+  controller_settings_.set_settings_color("color_top", color);
   ui->openGLWidget->update();
 }
 
@@ -214,7 +215,7 @@ void MainWindow::On_pBColorLine_clicked() {
   QPushButton *clickedButton = qobject_cast<QPushButton *>(sender());
   QPoint point = mapTo(this, clickedButton->pos());
   QColor color = ShowDialog(point);
-  controller_->set_settings_color("color_line", color);
+  controller_settings_.set_settings_color("color_line", color);
   ui->openGLWidget->update();
 }
 
@@ -223,7 +224,7 @@ void MainWindow::On_pBColorBackground_clicked() {
     QPushButton *clickedButton = qobject_cast<QPushButton *>(sender());
     QPoint point = clickedButton->mapToGlobal(clickedButton->pos());
     QColor color = ShowDialog(point);
-    controller_->set_settings_color("color_back", color);
+    controller_settings_.set_settings_color("color_back", color);
     ui->openGLWidget->update();
     ui->openGLWidget->update();
   }
@@ -243,7 +244,7 @@ QColor MainWindow::ShowDialog(QPoint point) {
 
 void MainWindow::on_ProjTypeCombo_currentIndexChanged(int index) {
   if (flag_open_ == true) {
-    controller_->set_settings("type_of_projection", index);
+    controller_settings_.set_settings("type_of_projection", index);
     ui->openGLWidget->update();
   }
 }
@@ -264,18 +265,18 @@ void MainWindow::DataOutputToScreen() {
 }
 
 void MainWindow::DefaultSettings() {
-  ui->spinBoxTypeTop->setValue(controller_->get_settings("point_size"));
-  ui->spinBoxTypeLine->setValue(controller_->get_settings("line_width"));
+  ui->spinBoxTypeTop->setValue(controller_settings_.get_settings("point_size"));
+  ui->spinBoxTypeLine->setValue(controller_settings_.get_settings("line_width"));
   ui->horizontalSliderTypeTop->setValue(
-      controller_->get_settings("point_size"));
+      controller_settings_.get_settings("point_size"));
   ui->horizontalSliderTypeLine->setValue(
-      controller_->get_settings("line_width"));
+      controller_settings_.get_settings("line_width"));
   ui->comboBox_type_top->setCurrentIndex(
-      controller_->get_settings("vertex_display_method"));
+      controller_settings_.get_settings("vertex_display_method"));
   ui->cB_type_line->setCurrentIndex(
-      controller_->get_settings("line_display_method"));
+      controller_settings_.get_settings("line_display_method"));
   ui->ProjTypeCombo->setCurrentIndex(
-      controller_->get_settings("type_of_projection"));
+      controller_settings_.get_settings("type_of_projection"));
 }
 void MainWindow::on_save_bmp_clicked() {
   if (flag_open_ == true) {

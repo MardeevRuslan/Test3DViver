@@ -1,7 +1,5 @@
 #include "model.h"
 
-#include "./ui_mainwindow.h"
-#include "mainwindow.h"
 
 namespace s21 {
 const float kValuePI = 3.141593;

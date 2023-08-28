@@ -33,7 +33,7 @@ void MyGLWidget::paintGL() {
 
 void MyGLWidget::Draw() {
   s21::FactoryColorSetting::SelectElementType(
-      kElementBack, controller_->get_settings_color("color_back"));
+      kElementBack, controller_settings_.get_settings_color("color_back"));
   GLfloat *vertices = controller_->get_vertices();
   GLuint *indices = controller_->get_indices();
 
@@ -44,18 +44,18 @@ void MyGLWidget::Draw() {
   glLoadIdentity();
 
   glVertexPointer(3, GL_FLOAT, 0, vertices);
-  glPointSize(controller_->get_settings("point_size"));
-  glLineWidth(controller_->get_settings("line_width"));
+  glPointSize(controller_settings_.get_settings("point_size"));
+  glLineWidth(controller_settings_.get_settings("line_width"));
   LineDisplayMethod();
   PointDisplayMethod();
   glEnableClientState(GL_VERTEX_ARRAY);
   s21::FactoryColorSetting::SelectElementType(
-      kElementTop, controller_->get_settings_color("color_top"));
-  if (controller_->get_settings("vertex_display_method") != 2) {
+      kElementTop, controller_settings_.get_settings_color("color_top"));
+  if (controller_settings_.get_settings("vertex_display_method") != 2) {
     glDrawArrays(GL_POINTS, 0, controller_->get_vertex_count());
   }
   s21::FactoryColorSetting::SelectElementType(
-      kElementLine, controller_->get_settings_color("color_line"));
+      kElementLine, controller_settings_.get_settings_color("color_line"));
   glDrawElements(GL_LINES, controller_->get_indices_size(), GL_UNSIGNED_INT,
                  indices);
   glDisableClientState(GL_VERTEX_ARRAY);
@@ -64,7 +64,7 @@ void MyGLWidget::Draw() {
 }
 
 void MyGLWidget::LineDisplayMethod() {
-  if (controller_->get_settings("line_display_method") == 1) {
+  if (controller_settings_.get_settings("line_display_method") == 1) {
     glEnable(GL_LINE_STIPPLE);
     glLineStipple(1, 0x0101);
   } else {
@@ -73,7 +73,7 @@ void MyGLWidget::LineDisplayMethod() {
 }
 
 void MyGLWidget::PointDisplayMethod() {
-  if (controller_->get_settings("vertex_display_method") == 0) {
+  if (controller_settings_.get_settings("vertex_display_method") == 0) {
     glEnable(GL_POINT_SMOOTH);
   } else {
     glDisable(GL_POINT_SMOOTH);
@@ -84,7 +84,7 @@ void MyGLWidget::ProjectionDisplayMethod() {
   int w = this->width();
   int h = this->height();
   QVector2D prop = QVector2D(w, h).normalized();
-  if (controller_->get_settings("type_of_projection") == 0) {
+  if (controller_settings_.get_settings("type_of_projection") == 0) {
     glOrtho(-1.0, 1.0, -1.0, 1.0, -5.0, 5.0);
   } else {
     const qreal zNear = 0.01, zFar = 200, fov = 45.0;

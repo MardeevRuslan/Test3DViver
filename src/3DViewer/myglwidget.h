@@ -19,6 +19,7 @@
 #include <iostream>
 
 #include "controller.h"
+#include "controller_settings.h"
 #include "factory_color_settings.h"
 #include "model.h"
 #include "object.h"
@@ -50,5 +51,6 @@ class MyGLWidget : public QOpenGLWidget, protected QOpenGLFunctions {
   void CoordinateAxis();
   bool flag_open_ = false;
   s21::Controller *controller_;
+  s21::ControllerSettings controller_settings_;
 };
 #endif  // CPP4_3DVIWER_3DVIEWER_MYGLWIDGET_H_

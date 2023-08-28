@@ -1,43 +1,48 @@
 PROJECT_NAME = 3DViewer
-
-CC = g++ -std=c++17
-LDFLAGS = -Wall -Werror -Wextra 
-FLAG_GCOV = -fprofile-arcs -ftest-coverage
-ADD_LIBS = -lcheck
-FLAG_LINUX = -pthread -lcheck_pic -pthread -lrt -lm -lsubunit
+GCC =  g++ -std=c++17
+LDFLAGS = -Wall -Werror -Wextra
+SOURCE = 3DViewer/main.cc 3DViewer/mainwindow.cc 3DViewer/model.cc 3DViewer/parser.cc 3DViewer/myglwidget.cc
+TEST = s21_test.cc
+GCOV = --coverage
 BUILD = build
 BUILD_DIR = ./build
 APP_DIR = ./app
 DIST_DIR = ./dist
-LEAKS_DIR = ./leaks
-MODELS_DIR = ./models
-MANUAL = Manual
 QMAKE = qmake
 QT_INSTALL_PREFIX = $(shell $(QMAKE) -query QT_INSTALL_PREFIX)
+MANUAL = Manual
 
-OS := $(shell uname -s)
+OS = $(shell uname)
 
-ifeq ($(OS), Linux)
-	ADD_LIBS +=`pkg-config --cflags --libs check` -lm -lsubunit
+ifeq ($(OS), Darwin)
+LIBFLAGS = -lm -lgtest -lstdc++
+LEAKS = leaks --atExit -- test -fsanitize=address
+LCOV = lcov -t "test" -c -d  ./ --no-external --output-file ./coverage.info --ignore-errors mismatch
+else
+LIBFLAGS = -lstdc++ `pkg-config --cflags --libs gtest`
+LEAKS = CK_FORK=no valgrind --leak-check=full --show-leak-kinds=all ./test
+LCOV = lcov -t "test" -c -d  ./ --no-external --output-file ./coverage.info 
 endif
+
 
 RUN = $(APP_DIR)/$(APP_NAME)
 ifeq ($(OS), Darwin)
     RUN = open $(APP_DIR)/$(APP_NAME)
 endif
 
-APP_NAME = $(PROJECT_NAME)
+APP_NAME = 3DViewer
 ifeq ($(OS), Darwin)
-    APP_NAME = $(PROJECT_NAME).app
+    APP_NAME = 3DViewer.app
 endif
 
 default: all
 
-all: clean style_fix install
+all: install
+
 
 build:
 	mkdir -p $(BUILD_DIR)
-	cmake -DCMAKE_PREFIX_PATH=$(QT_INSTALL_PREFIX) $(PROJECT_NAME)/CMakeLists.txt -B $(BUILD_DIR)
+	cmake -DCMAKE_PREFIX_PATH=$(QT_INSTALL_PREFIX) 3DViewer/CMakeLists.txt -B $(BUILD_DIR)
 	make -C $(BUILD_DIR)
 	
 
@@ -56,56 +61,64 @@ run:
 
 dvi:
 	mkdir -p $(APP_DIR)
-	texi2pdf $(MANUAL).texi
-	texi2html  $(MANUAL).texi
-	cp -r $(MANUAL).pdf $(APP_DIR)
-	cp -r $(MANUAL).html $(APP_DIR)
-	rm $(MANUAL).aux $(MANUAL).log $(MANUAL).toc $(MANUAL).pdf $(MANUAL).html
+	texi2dvi $(MANUAL).texi -c -o $(APP_DIR)/manual.dvi
+
+pdf:
+	mkdir -p $(APP_DIR)
+	texi2pdf $(MANUAL).texi -o $(APP_DIR)/manual.pdf
+
 
 dist:
 	mkdir -p $(DIST_DIR)
-	tar -cvf $(DIST_DIR)/$(PROJECT_NAME).tar.gz $(PROJECT_NAME) $(LEAKS_DIR) $(MODELS_DIR) ./*.c ./*.h Makefile
+	tar -cvf $(DIST_DIR)/Calc.tar.gz s21_SmartCalc
 
 
-./tests/$(PROJECT_NAME)_test.c : ./tests/$(PROJECT_NAME)_test.check
-	checkmk ./tests/$(PROJECT_NAME)_test.check > ./tests/$(PROJECT_NAME)_test.c
+test: $(TEST)
+	rm -rf test
+	$(GCC) $(LDFLAGS)  $(TEST) 3DViewer/parser.cc $(LIBFLAGS) -o test 
+	./test
 
-test : ./tests/$(PROJECT_NAME)_test.c parser_coordinates.c s21_affine.c s21_matrix.c s21_obj.c parser_coordinates.h
-	$(CC) $(LDFLAGS) ./tests/$(PROJECT_NAME)_test.c parser_coordinates.c  parser_coordinates.h s21_affine.c s21_matrix.c s21_obj.c -o ./tests/$(PROJECT_NAME)_test $(ADD_LIBS) 
-	./tests/$(PROJECT_NAME)_test
 
-gcov_report : ./tests/$(PROJECT_NAME)_test.c parser_coordinates.c s21_affine.c s21_matrix.c s21_obj.c parser_coordinates.h
-	$(CC) $(LDFLAGS) ./tests/$(PROJECT_NAME)_test.c parser_coordinates.c  parser_coordinates.h s21_affine.c s21_matrix.c s21_obj.c -o ./tests/$(PROJECT_NAME)_test $(ADD_LIBS)  $(FLAG_GCOV) 
-	./tests/$(PROJECT_NAME)_test
-	lcov --capture --directory ./ --output-file coverage.info
-	genhtml coverage.info --output-directory GCOV_REPORT
-	open GCOV_REPORT/index.html
+
+gcov_report:
+	$(GCC)  -I $(GCOV) $(TEST) $(SOURCE)  $(LIBFLAGS) -o test
+	./test
+	$(LCOV) 
+	genhtml ./coverage.info --output-directory ./report/
+
 
 check:
-	cppcheck -q  --enable=all --inconclusive --language=c++ --template='{id} {file}:{line} {message}' --suppress=missingIncludeSystem ./*/*.cc ./*/*.h
-	
-	
-style:
-	cp ../materials/linters/.clang-format ./
-	clang-format -n --style=google ./*/*.cc ./*/*.h
+	cppcheck --enable=all --suppress=missingIncludeSystem --inconclusive --check-config $(SOURCE) *.h */*.h  */*.cc
+	cppcheck -q --enable=all --inconclusive --language=c++ --template='{id} {file}:{line} {message}' --suppress=missingIncludeSystem *.h */*.h  */*.cc
+	cp ../materials/linters/.clang-format .clang-format
+	clang-format -n   */*.h *.cc */*.cc
 	rm .clang-format
+	
+leaks:
+	$(GCC)  $(LDFLAGS) $(SOURCE) $(TEST) $(LIBFLAGS) -o test 
+	$(LEAKS)
 
 style_fix:
 	cp ../materials/linters/.clang-format ./
-	clang-format -i --style=google ./*/*.cc ./*/*.h
+	clang-format -i *.cc   */*.h */*.cc
 	rm .clang-format
 
-valgrind: ./leaks/test.c parser_coordinates.c  s21_affine.c s21_matrix.c s21_obj.c
-	$(CC) $(LDFLAGS) ./leaks/test.c parser_coordinates.c  s21_affine.c s21_matrix.c s21_obj.c -o ./leaks/$(PROJECT_NAME)_test_val -lm
-	CK_FORK=no valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes --verbose --log-file=REPORT_VALGRIND.txt ./leaks/$(PROJECT_NAME)_test_val
-
-leaks: ./leaks/test.c parser_coordinates.c  s21_affine.c s21_matrix.c s21_obj.c
-	$(CC) $(LDFLAGS) ./leaks/test.c parser_coordinates.c  s21_affine.c s21_matrix.c s21_obj.c -o ./leaks/$(PROJECT_NAME)_test_leaks 
-	leaks -atExit -- ./leaks/$(PROJECT_NAME)_test_leaks
-
 clean:
+	rm -rf *.o *.a *.so *.out *.dSYM test *.txt report *.info *.gcda *.gcno *.gch .clang-format
 	rm -rf ./build *.o *.a *.exe *.out *.gcov *.gcno *.gcda *.gch *.info ./tests/$(PROJECT_NAME)_test ./tests/$(PROJECT_NAME)_test_leaks ./tests/$(PROJECT_NAME)_test.c  lcover_rep *.stackdump GCOV_REPORT REPORT_VALGRIND.txt *.check
 	rm -rf $(APP_DIR) $(DIST_DIR)
+	rm -rf ./*.log ./*.aux ./*.bbl ./*.blg ./*.out ./*.toc
+ 
+git:
+	git add .
+	git commit -m "100 %"
+	git push
+
+.PHONY:  all test check gcov_report style_fix leaks clean 
+
+	
+.PHONY: all clean test gcov_report default clang_format valgrind leaks build install uninstall rebuild run dvi dist 
+
 
 min:
 	g++ 3DViewer/main.cc 3DViewer/mainwindow.cc 3DViewer/model.cc 3DViewer/parser.cc 3DViewer/s21_matrix_oop.cc 3DViewer/s21_matrix_constructor.cc 3DViewer/s21_matrix_operator.cc

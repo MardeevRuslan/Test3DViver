@@ -6,6 +6,7 @@
 #include <array>
 #include <cstdio>
 #include <tuple>
+#include <map>
 
 #if defined(__APPLE__)
 #include <OpenGL/gl.h>
@@ -17,7 +18,7 @@
 
 #include "object.h"
 #include "parser.h"
-#include "setting.h"
+
 
 namespace s21 {
 class Model {
